@@ -36,15 +36,17 @@ def recv_intro_message(conn):
 def send_long_message(conn, message):
     
     # TODO: Remove the line below when you start implementing this function!
-    raise NotImplementedError("Not implemented yet!")
+    # raise NotImplementedError("Not implemented yet!")
 
     # TODO: Send the length of the message: this should be 8 total hexadecimal digits
     #       This means that ffffffff hex -> 4294967295 dec
     #       is the maximum message length that we can send with this method!
     #       hint: you may use the helper function `to_hex`. Don't forget to encode before sending!
-
+    length = to_hex(len(message))
+    conn.sendall(str.encode(length))
 
     # TODO: Send the message itself to the server. Don't forget to encode before sending!
+    conn.sendall(str.encode(message))
 
 
 def main():
