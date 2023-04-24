@@ -17,11 +17,7 @@ def recv_intro_message(conn):
     full_data = b""
     data = b""
 
-    # TODO: Receive data bytes one by one until a newline ('\n') is received
-    #       1. Use a loop that keeps going until `data` equals '\n'
-    #       2. Receive 1 byte and set it to the `data` variable
-    #       3. Add `data` to `full_data`
-
+    # Receive data bytes one by one until a newline ('\n') is received
     while data != b'\n':
         data = conn.recv(1)
         full_data += data
@@ -35,17 +31,11 @@ def recv_intro_message(conn):
 ##################################
 def send_long_message(conn, message):
     
-    # TODO: Remove the line below when you start implementing this function!
-    # raise NotImplementedError("Not implemented yet!")
-
-    # TODO: Send the length of the message: this should be 8 total hexadecimal digits
-    #       This means that ffffffff hex -> 4294967295 dec
-    #       is the maximum message length that we can send with this method!
-    #       hint: you may use the helper function `to_hex`. Don't forget to encode before sending!
+    # Send the length of the message: this should be 8 total hexadecimal digits
     length = to_hex(len(message))
     conn.sendall(str.encode(length))
 
-    # TODO: Send the message itself to the server. Don't forget to encode before sending!
+    # Send the message itself to the server.
     conn.sendall(str.encode(message))
 
 
@@ -60,10 +50,10 @@ def main():
         """
         Part 1: Introduction
         """
-        # TODO: receive the introduction message by implementing `recv_intro_message` above.
+        # Receive the introduction message
         intro = recv_intro_message(conn)
 
-        # TODO: print the received message to the screen
+        # Print the received message to the screen
         print(intro)
 
         """
@@ -71,7 +61,7 @@ def main():
         """
         long_msg = input("Please enter a message to send to the server: ")
 
-        # TODO: Send message to the server by implementing `send_long_message` above.
+        # Send message to the server
         send_long_message(conn, long_msg)
 
 

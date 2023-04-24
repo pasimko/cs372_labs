@@ -12,8 +12,7 @@ def send_intro_message(conn):
     #       and {MAJOR} with your major (i.e. CS, ECE, any others?)
     intro_message = b"Hello! Welcome to my (simkop) server! I'm majoring in CS!\n"
 
-    # TODO: Send this intro message to the client. Don't forget to encode() it!
-    #       hint: use the `conn` handle and `sendall`!
+    # Send this intro message to the client.
     conn.sendall((intro_message))
 
 
@@ -32,7 +31,7 @@ def receive_long_message(conn):
     full_data = b""
     bytes_received = 0
 
-    # TODO: Receive all data
+    # Receive all data
     #      1. Keep going until `bytes_received` is less than `data_length` (hint: use a loop)
     #      2. Receive a `CHUNK` of data (see `CHUNK` variable above)
     #      3. Update `bytes_received` and `full_data` variables
@@ -62,16 +61,16 @@ def main():
             """
             Part 1: Introduction
             """
-            # TODO: Send the introduction message by implementing `send_intro_message` above.
+            # Send the introduction message
             send_intro_message(conn)
 
             """
             Part 2: Long Message Exchange Protocol
             """
-            # TODO: Receive long message by implementing the function above
+            # Receive long message
             message = receive_long_message(conn)
 
-            # TODO: print the received `message` to the screen!
+            # Print the received `message` to the screen!
             print(message)
 
 # Run the `main()` function
