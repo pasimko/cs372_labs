@@ -8,9 +8,9 @@ CHUNK = 100
 
 # TODO: Implement me for Part 1!
 async def send_intro_message(writer):
-    intro_message = "Hello! Welcome to my (lyakhovs) server! I'm majoring in CS\n"
+    intro_message = b"Hello! Welcome to my (nittac,dorfmanr,simkop) server! We're majoring in CS\n"
 
-    writer.write(intro_message.encode())
+    writer.write(intro_message)
     await writer.drain()
 
 
