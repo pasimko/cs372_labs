@@ -41,7 +41,7 @@ async def handle_client(reader, writer):
     message = await receive_long_message(reader)
 
     # I'm only printing the last 8 characters of the message here because it's long
-    print("done: " +  message[-8:])
+    print("done: " +  message)
 
     writer.close()
     await writer.wait_closed()
