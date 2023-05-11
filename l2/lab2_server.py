@@ -1,6 +1,7 @@
 import socket
+import threading
 
-INTERFACE, SPORT = 'localhost', 8081
+INTERFACE, SPORT = 'localhost', 8080
 CHUNK = 100
 
 
@@ -42,6 +43,14 @@ def receive_long_message(conn):
 
     return full_data.decode()
 
+def handle_client(conn, client_host, client_port):
+    print("Connection received from:", client_host, "on port", client_port)
+    # Send the introduction message
+    send_intro_message(conn)
+    # Receive long message
+    message = receive_long_message(conn)
+    # Print the received `message` to the screen!
+    print(message)
 
 def main():
 
@@ -56,22 +65,8 @@ def main():
 
             # Accept a connection from a client
             conn, (client_host, client_port) = server_socket.accept()
-            print("Connection received from:", client_host, "on port", client_port)
-
-            """
-            Part 1: Introduction
-            """
-            # Send the introduction message
-            send_intro_message(conn)
-
-            """
-            Part 2: Long Message Exchange Protocol
-            """
-            # Receive long message
-            message = receive_long_message(conn)
-
-            # Print the received `message` to the screen!
-            print(message)
+            thread = threading.Thread(target=handle_client, args=(conn, client_host, client_port))
+            thread.start()
 
 # Run the `main()` function
 if __name__ == "__main__":
