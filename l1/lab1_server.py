@@ -1,6 +1,6 @@
 import socket
 
-INTERFACE, SPORT = 'localhost', 8080
+INTERFACE, SPORT = 'localhost', 8081
 CHUNK = 100
 
 
@@ -10,7 +10,7 @@ CHUNK = 100
 def send_intro_message(conn):
     # TODO: Replace {ONID} with your ONID (mine is lyakhovs)
     #       and {MAJOR} with your major (i.e. CS, ECE, any others?)
-    intro_message = b"Hello! Welcome to my (simkop) server! I'm majoring in CS!\n"
+    intro_message = b"Hello! Welcome to my (nittac,dorfmanr,simkop) server! We r majoring in CS!\n"
 
     # Send this intro message to the client.
     conn.sendall((intro_message))

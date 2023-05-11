@@ -1,6 +1,6 @@
 import socket
 
-IP, DPORT = 'localhost', 8080
+IP, DPORT = 'localhost', 8081
 
 # Helper function that converts an integer into a string of 8 hexadecimal digits
 # Assumption: integer fits in 8 hexadecimal digits
