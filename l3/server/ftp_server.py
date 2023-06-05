@@ -23,19 +23,51 @@ async def send_long_message(writer: asyncio.StreamWriter, data):
 
 async def receive_long_message(reader: asyncio.StreamReader):
     # First we receive the length of the message: this should be 8 total hexadecimal digits!
-    # Note: `socket.MSG_WAITALL` is just to make sure the data is received in this case.
     data_length_hex = await reader.readexactly(8)
-
-    # Then we convert it from hex to integer format that we can work with
     data_length = int(data_length_hex, 16)
 
     full_data = await reader.readexactly(data_length)
     return full_data.decode()
 
+async def handle_command(argv, reader, writer):
+    code = "NAK"
+    msg = None
+    if argv[0] == "list":
+        code = "ACK"
+        msg = ' '.join(os.listdir())
+    elif argv[0] == "remove":
+        try:
+            os.remove(argv[1])
+            code = "ACK"
+            msg = "File successfully removed."
+        except FileNotFoundError:
+            msg = "File not found."
+        except PermissionError:
+            msg = "Permission denied."
+        except Exception as e:
+            msg = f"An error occurred: {str(e)}"
+    elif argv[0] == "put":
+        code = "PUT"
+    elif argv[0] == "get":
+        try:
+            with open(argv[1], "r") as file:
+                msg = file.read()
+                code = "PUT"
+        except FileNotFoundError:
+            msg = "File not found."
+        except PermissionError:
+            msg = "Permission denied."
+        except Exception as e:
+            msg = f"An error occurred: {str(e)}"
+    elif argv[0] == "close":
+        code = "CLOSE"
+        msg = "Goodbye"
+    await send_long_message(writer, code)
+    await send_long_message(writer, msg)
 
 async def handle_client(reader, writer):
     auth = False
-    for i in range(3):
+    for attempts in range(3):
         await send_long_message(writer, "PROMPT")
         await send_long_message(writer, "Please enter your password: ")
         if await receive_long_message(reader) == PASSWORD:
@@ -49,6 +81,7 @@ async def handle_client(reader, writer):
             await send_long_message(writer, "Enter a command")
             msg = await receive_long_message(reader)
             print(msg)
+            await handle_command(msg.split(), reader, writer)
     else:
         await send_long_message(writer, "CLOSE")
         await send_long_message(writer, "Incorrect password.")

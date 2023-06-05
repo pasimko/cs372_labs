@@ -31,13 +31,20 @@ async def receive_long_message(reader: asyncio.StreamReader):
 async def connect(i):
     reader, writer = await asyncio.open_connection(IP, DPORT)
 
+    newMsg = ""
     while True:
         code = await receive_long_message(reader)
         msg = await receive_long_message(reader)
-        print(msg)
         if code == "CLOSE":
             return 0
-        if code == "PROMPT":
+        # Server is sending file
+        if code == "PUT":
+            with open(newMsg.split()[1], "w") as file:
+                file.write(msg)
+        elif code != "PROMPT":
+            print(msg)
+        else:
+            print(msg)
             newMsg = input("> ")
             await send_long_message(writer, newMsg)
 
