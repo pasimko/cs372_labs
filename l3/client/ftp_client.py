@@ -45,7 +45,7 @@ async def connect(i):
         elif code == "GET":
             msg = "RESET"
             try:
-                with open(newMsg[1], "r") as file:
+                with open(newMsg.split()[1], "r") as file:
                     msg = file.read()
             except FileNotFoundError:
                 print("File not found.")

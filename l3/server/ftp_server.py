@@ -55,16 +55,15 @@ async def handle_command(argv, reader, writer):
             msg = "Server is requesting file..."
             await send_long_message(writer, code)
             await send_long_message(writer, msg)
-            with open(argv[1], "w") as file:
-                clientResponse = await receive_long_message(reader)
-                if clientResponse == "RESET":
-                    code = "NAK"
-                    msg = "Client failed to send file."
-                else:
+            clientResponse = await receive_long_message(reader)
+            if clientResponse == "RESET":
+                code = "NAK"
+                msg = "Client failed to send file."
+            else:
+                with open(argv[1], "w") as file:
                     file.write(clientResponse)
                     msg = "File successfully written."
                     code = "ACK"
-            await send_long_message(writer, "GET")
         except FileNotFoundError:
             msg = "File not found."
         except PermissionError:
