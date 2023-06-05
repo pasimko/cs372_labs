@@ -16,6 +16,8 @@ def to_hex(number):
     return "{:08x}".format(number)
 
 async def send_long_message(writer: asyncio.StreamWriter, data):
+    print("Sending message:")
+    print(data)
     writer.write(to_hex(len(data)).encode())
     writer.write(data.encode())
 
@@ -27,6 +29,7 @@ async def receive_long_message(reader: asyncio.StreamReader):
     data_length = int(data_length_hex, 16)
 
     full_data = await reader.readexactly(data_length)
+    print(full_data.decode())
     return full_data.decode()
 
 async def handle_command(argv, reader, writer):
@@ -47,7 +50,27 @@ async def handle_command(argv, reader, writer):
         except Exception as e:
             msg = f"An error occurred: {str(e)}"
     elif argv[0] == "put":
-        code = "PUT"
+        try:
+            code = "GET"
+            msg = "Server is requesting file..."
+            await send_long_message(writer, code)
+            await send_long_message(writer, msg)
+            with open(argv[1], "w") as file:
+                clientResponse = await receive_long_message(reader)
+                if clientResponse == "RESET":
+                    code = "NAK"
+                    msg = "Client failed to send file."
+                else:
+                    file.write(clientResponse)
+                    msg = "File successfully written."
+                    code = "ACK"
+            await send_long_message(writer, "GET")
+        except FileNotFoundError:
+            msg = "File not found."
+        except PermissionError:
+            msg = "Permission denied."
+        except Exception as e:
+            msg = f"An error occurred: {str(e)}"
     elif argv[0] == "get":
         try:
             with open(argv[1], "r") as file:
@@ -62,6 +85,8 @@ async def handle_command(argv, reader, writer):
     elif argv[0] == "close":
         code = "CLOSE"
         msg = "Goodbye"
+    else:
+        msg = "Command not found."
     await send_long_message(writer, code)
     await send_long_message(writer, msg)
 
@@ -73,6 +98,8 @@ async def handle_client(reader, writer):
         if await receive_long_message(reader) == PASSWORD:
             auth = True
             break
+        await send_long_message(writer, "NAK")
+        await send_long_message(writer, "Incorrect password.")
 
     if auth:
         while True:
