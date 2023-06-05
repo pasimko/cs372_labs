@@ -4,7 +4,7 @@ from time import sleep
 from threading import Thread
 import asyncio
 
-IP, DPORT = 'localhost', 8080
+IP, DPORT = 'localhost', 8064
 
 os.chdir('myfiles')
 

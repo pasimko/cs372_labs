@@ -2,10 +2,10 @@ import os
 import socket
 import asyncio
 
-INTERFACE, SPORT = 'localhost', 8080
+INTERFACE, SPORT = 'localhost', 8064
 CHUNK = 100
 
-PASSWORD = "Juicyjews"
+PASSWORD = "unguessable"
 
 os.chdir('myfiles')
 
@@ -91,6 +91,8 @@ async def handle_command(argv, reader, writer):
 
 async def handle_client(reader, writer):
     auth = False
+    await send_long_message(writer, "SYN") # :3
+    await send_long_message(writer, "Welcome to (simkop, nittac, dorfmanr)'s FTP server! ")
     for attempts in range(3):
         await send_long_message(writer, "PROMPT")
         await send_long_message(writer, "Please enter your password: ")
