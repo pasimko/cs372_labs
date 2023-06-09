@@ -1,6 +1,6 @@
 import socket
 
-server_address = ('localhost', 8000)  # Replace with the actual server address and port
+server_address = ('localhost', 8000)
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(server_address)
@@ -10,7 +10,7 @@ client_socket.send(request.encode())
 
 response = b''
 while True:
-    chunk = client_socket.recv(4096)  # Adjust the buffer size as per your needs
+    chunk = client_socket.recv(4096)
     if not chunk:
         break
     response += chunk
